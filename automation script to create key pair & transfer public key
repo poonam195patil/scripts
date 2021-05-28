@@ -1,0 +1,15 @@
+# create a keypair & allow permission to transfer public key
+
+sudo apt-get install sshpass -y
+sudo apt-get update -y
+sudo hostnamectl set-hostname controller
+sudo ssh-keygen -t rsa -q -f "/home/ubuntu/.ssh/id_rsa" -N ""
+sudo sed -i 's/no/yes/g' /etc/ssh/sshd_config
+pwd=$(echo cGFzc3cwcmQxCg== | base64 -d )
+echo $pwd >secrete.txt
+echo ubuntu:$pwd >userinfo.txt
+sudo cat userinfo.txt | sudo chpasswd
+sudo systemctl restart sshd
+
+# scp command 
+sshpass -f secrete.txt scp -3 -r -q -o StrictHostKeyChecking=no -o LogLevel=DEBUG token.txt ubuntu@${db_ip}:/home/ubuntu
