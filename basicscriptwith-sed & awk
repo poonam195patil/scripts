@@ -1,0 +1,39 @@
+git clone $repositoryURL
+sed -i 's/abc.com:5555/xyz.com:5555/g' 01-docker-compose.base.yml
+
+sed -i 's/1521/1521:1521/g' 06-docker-compose.cleandb.yml
+sed -i '8iplacement:' 06-docker-compose.yml
+sed -i '8s/^/      /' 06-docker-compose.yml
+sed -i '9iconstraints: [node.hostname == db] ' 06-docker-compose.cleandb.yml
+sed -i '9s/^/          /' 06-docker-compose.cleandb.yml
+sed -i '51i- 9990:9990' 01-docker-compose.base.yml
+sed -i '51s/^/      /' 01-docker-compose.base.yml
+sed -i '52d' 01-docker-compose.base.yml
+sed -i '72idepends_on:' 07-docker-compose.yml
+sed -i '72s/^/    /' 07-docker-compose.yml
+sed -i '73i- ecdb' 07-docker-composeg.yml
+sed -i '73s/^/       /' 07-docker-compose.yml
+sed -i '79iplacement:' 07-docker-compose.yml
+sed -i '79s/^/      /' 07-docker-compose.yml
+sed -i '80iconstraints: [node.hostname == controller] ' 07-docker-compose.yml
+sed -i '80s/^/         /' 07-docker-compose.yml
+sed -i '51i- 9990:9990' 01-docker-compose.yml
+sed -i '51s/^/      /' 01-docker-compose.yml
+sed -i '52d' 01-docker-compose.base.yml
+
+echo ${db_image}
+echo "${db_image}"|cut -c 25- >file1.txt
+path1=$(cat file1.txt)
+echo $path1
+echo $path1 |awk -F: '{print $1}' > file2.txt
+path=$(cat file2.txt)
+echo $path
+sed -i 's|docker-flyway-db|'"$path"'|g' 06-docker-compose.yml
+cd ..
+cd ..
+cd ..
+git add .
+git commit -m "Updated docker repo for images"
+cd ..
+pwd
+
