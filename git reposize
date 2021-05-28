@@ -1,0 +1,33 @@
+#!/bin/bash
+uname=$(jq -r '.uname' config.json | base64 -d)
+passwd=$(jq -r '.passwd' config.json | base64 -d)
+truncate -s 0 output.txt
+for i in $(cat repolist.txt);
+do
+
+     curl -u "$uname:$passwd" https://api.bitbucket.org/2.0/repositories/projectname/$i? >repodata.json
+     jq -r 'select(.size > 1047234325)| .name ,.size ' repodata.json >repo.txt
+     a= cat repo.txt | awk 'NR==2{print $1}'
+     cat repo.txt  | awk 'NR==1{$1; print "Repository Name:", $1;}'>> output.txt
+     cat repo.txt  | awk 'NR==2{$1=$1/(1024^3); print "Repository Size", $1,"GB";}' >>output.txt
+    
+done
+
+
+#config.json file
+
+{
+    "uname" : "$username" ,
+    "passwd" : "$pwd" 
+    
+}
+
+
+#repolist.txt
+
+abc
+core
+automation-core
+testautomation
+
+
